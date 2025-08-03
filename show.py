@@ -133,6 +133,6 @@ for nc_file in nc_files:
 df = pd.DataFrame(all_results, columns=["Region", "Date", "Pollutant", "Concentration_µg/m³"])
 
 # Save to CSV
-df.to_csv("cities_air_quality_daily_05.csv", index=False)
+df.to_csv("cities_air_quality_daily_07.csv", index=False)
 
 print("✅ All data saved as cities_air_quality_daily_01.csv")

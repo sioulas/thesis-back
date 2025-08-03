@@ -16,7 +16,7 @@ request = {
     "level": ["0"],
     "type": ["interim_reanalysis"],
     "year": ["2024"],
-    "month": ["06"],
+    "month": ["07"],
 }
 
 client.retrieve(dataset, request).download("copernicus_data.nc")
