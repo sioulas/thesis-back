@@ -12,7 +12,6 @@ import pandas as pd
 from datetime import datetime
 import xgboost as xgb
 from pandas.tseries.frequencies import to_offset
-
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
@@ -28,8 +27,6 @@ app.add_middleware(
 DATABASE_URL = "postgresql+psycopg2://postgres:67206720Ks%40%40@127.0.0.1:5432/datacube"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -97,6 +94,32 @@ def read_air_quality(
     finally:
         session.close()
 
+@app.get("/pollution")
+def read_air_quality(region: str = None, date: str = None, pollutant: str = None):
+    query = "SELECT region, date, pollutant, concentration FROM odc_data WHERE 1=1"
+    params = {}
+    if region:
+        query += " AND region = :region"
+        params["region"] = region
+    if date:
+        query += " AND date LIKE :date"
+        params["date"] = f"{date}%"
+    if pollutant:
+        query += " AND pollutant LIKE :pollutant"
+        params["pollutant"] = f"{pollutant}%"
+
+    with engine.connect() as conn:
+        result = conn.execute(text(query), params).mappings()  # <-- use .mappings()
+        data = []
+        for row in result:
+            data.append({
+                "region": row["region"],
+                "date": row["date"],
+                "pollutant": row["pollutant"],
+                "concentration": row["concentration"]
+            })
+    return data
+
 @app.get("/regions")
 def read_regions():
     session = SessionLocal()
@@ -136,8 +159,6 @@ DAILY_POLLUTANTS = [
     "Sulphur Dioxide (SO₂) µg/m³",
     "Nitrogen Dioxide (NO₂) µg/m³"
 ]
-
-app = FastAPI()
 
 @app.get("/forecast")
 def forecast_air_quality(

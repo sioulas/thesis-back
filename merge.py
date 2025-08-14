@@ -32,7 +32,7 @@ merged_df["Date"] = merged_df.apply(
 )
 
 # Save the merged dataframe to a new CSV file
-merged_csv = "merged_2022.csv"
+merged_csv = "merged_2024.csv"
 merged_df.to_csv(merged_csv, index=False)
 
 print(f"✅ Merged CSV saved as {merged_csv}")

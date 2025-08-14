@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 import pandas as pd
 
-df = pd.read_csv("merged_2022.csv")
+df = pd.read_csv("merged_2024.csv")
 
 # Rename CSV columns to match DB schema
 df.rename(columns={
